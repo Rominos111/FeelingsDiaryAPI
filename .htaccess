@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+# Pages d'erreur
+ErrorDocument 404 /testAPI/pages/404.php
+ErrorDocument 403 /testAPI/pages/403.php
+ErrorDocument 401 /testAPI/pages/401.php
+
+# Désactivation de la visualisation du système de fichier
+Options -Indexes
