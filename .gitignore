@@ -3,5 +3,5 @@
 # ------------------------------
 
 .idea
-private
+private/*
 *.http
