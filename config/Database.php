@@ -10,9 +10,14 @@
  */
 class Database {
     /**
+     * Nom de la BDD
+     */
+    const DB_NAME = "testAPI";
+
+    /**
      * @var mysqli Connexion mysqli
      */
-    private static $connection = null;
+    private static ?mysqli $connection = null;
 
     /**
      * DB connectée ou non
