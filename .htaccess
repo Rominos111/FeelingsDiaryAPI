@@ -1,6 +1,11 @@
 Options +FollowSymLinks
 RewriteEngine On
 
+# HTTPS
+RewriteCond %{HTTP_HOST} ^api.r-thd\.fr [NC]
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://api.r-thd.fr/testAPI/$1 [R,L]
+
 # Pages d'erreur
 ErrorDocument 404 /testAPI/pages/404.php
 ErrorDocument 403 /testAPI/pages/403.php
