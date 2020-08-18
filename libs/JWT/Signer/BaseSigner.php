@@ -7,7 +7,10 @@
 
 namespace Lcobucci\JWT\Signer;
 
+require_once __DIR__ . "/../Signature.php";
 use Lcobucci\JWT\Signature;
+
+require_once __DIR__ . "/../Signer.php";
 use Lcobucci\JWT\Signer;
 
 /**

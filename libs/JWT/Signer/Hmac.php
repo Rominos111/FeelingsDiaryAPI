@@ -7,6 +7,8 @@
 
 namespace Lcobucci\JWT\Signer;
 
+require_once __DIR__ . "/BaseSigner.php";
+
 /**
  * Base class for hmac signers
  *

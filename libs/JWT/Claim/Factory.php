@@ -7,7 +7,10 @@
 
 namespace Lcobucci\JWT\Claim;
 
+require_once  __DIR__ . "/../Claim.php";
 use Lcobucci\JWT\Claim;
+
+require_once  __DIR__ . "/../Claim/EqualsTo.php";
 
 /**
  * Class that create claims

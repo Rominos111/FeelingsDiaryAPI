@@ -7,7 +7,13 @@
 
 namespace Lcobucci\JWT\Claim;
 
+require_once  __DIR__ . "/Basic.php";
+require_once  __DIR__ . "/Validatable.php";
+
+require_once  __DIR__ . "/../Claim.php";
 use Lcobucci\JWT\Claim;
+
+require_once  __DIR__ . "/../ValidationData.php";
 use Lcobucci\JWT\ValidationData;
 
 /**

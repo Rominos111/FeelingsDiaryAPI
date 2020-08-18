@@ -7,10 +7,21 @@
 
 namespace Lcobucci\JWT;
 
+require_once  __DIR__ . "/Claim/Factory.php";
 use Lcobucci\JWT\Claim\Factory as ClaimFactory;
+
+require_once  __DIR__ . "/Parsing/Encoder.php";
 use Lcobucci\JWT\Parsing\Encoder;
+
+require_once  __DIR__ . "/Signer/Key.php";
 use Lcobucci\JWT\Signer\Key;
+
 use function implode;
+
+require_once  __DIR__ . "/Claim/GreaterOrEqualsTo.php";
+require_once  __DIR__ . "/Claim/LesserOrEqualsTo.php";
+
+require_once  __DIR__ . "/Token.php";
 
 /**
  * This class makes easier the token creation process

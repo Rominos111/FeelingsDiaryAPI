@@ -7,6 +7,7 @@
 
 namespace Lcobucci\JWT\Signer\Hmac;
 
+require_once __DIR__ . "/../Hmac.php";
 use Lcobucci\JWT\Signer\Hmac;
 
 /**
