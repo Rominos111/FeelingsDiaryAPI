@@ -15,7 +15,7 @@ class Database {
     const DB_NAME = "testAPI";
 
     /**
-     * @var mysqli Connexion mysqli
+     * @var mysqli|null Connexion mysqli
      */
     private static ?mysqli $connection = null;
 
@@ -50,7 +50,7 @@ class Database {
      */
     public static function connect() : void {
         if (self::isConnected()) {
-            echo "connecté";
+            echo "déjà connecté";
         }
         else {
             // Importation des identifiants de la base

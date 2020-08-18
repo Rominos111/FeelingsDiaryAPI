@@ -12,10 +12,10 @@ class DatabaseConnectionException extends Exception {
     /**
      * Constructeur
      *
-     * @param string $message Message
+     * @param string|null $message Message
      * @param int $code Code
      */
-    public function __construct($message = null, $code = 0) {
+    public function __construct(string $message = null, int $code = 0) {
         if ($message === null) {
             $message = "Database connection failed.";
         }
