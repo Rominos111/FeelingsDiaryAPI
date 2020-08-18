@@ -30,4 +30,4 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 }
 
-require_once "config/Database.php";
+require_once "config/database/Database.php";
