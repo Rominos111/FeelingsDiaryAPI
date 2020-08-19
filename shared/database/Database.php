@@ -54,7 +54,7 @@ class Database {
         }
         else {
             // Importation des identifiants de la base
-            require_once("private/db-config.php");
+            require_once("config/db-config.php");
 
             $host = $_SESSION["db"]["host"];
             $user = $_SESSION["db"]["user"];
