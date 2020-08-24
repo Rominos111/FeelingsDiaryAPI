@@ -1,13 +1,13 @@
-![License](https://img.shields.io/github/license/Rominos111/testAPI)
-![Code quality](https://img.shields.io/codefactor/grade/github/Rominos111/testAPI)
-![Repo size](https://img.shields.io/github/repo-size/Rominos111/testAPI)
+![License](https://img.shields.io/github/license/Rominos111/FeelingsDiaryAPI)
+![Code quality](https://img.shields.io/codefactor/grade/github/Rominos111/FeelingsDiaryAPI)
+![Repo size](https://img.shields.io/github/repo-size/Rominos111/FeelingsDiaryAPI)
 
-# Test d'API
+# API FeelingsDiary
 
-P'tite API PHP débile pour tester
+P'tite API PHP débile mais qui va servir à quelque chose
 
-<sub>Merci à Yohann pour l'[API du projet](https://github.com/ythepaut/info406_serveur), c'est top pour savoir comment commencer, et je parie qu'il y a moyen d'améliorer des trucs ;)</sub>
+<sub>Merci à Yohann pour l'[API du projet](https://github.com/ythepaut/info406_serveur), c'est top pour savoir comment commencer ;)</sub>
 
-⬇ Moi quand j'essaie de refaire le système de jetons
+⬇ Moi quand j'aurai enfin réussi mon système de jetons
 
-<img src="https://image.noelshack.com/minis/2016/50/1481994659-mathematicienrisitas.png" />
+<img src="https://image.noelshack.com/fichiers/2016/48/1480546095-risitas-moine2.png" />
