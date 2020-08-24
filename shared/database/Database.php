@@ -12,7 +12,7 @@ class Database {
     /**
      * Nom de la BDD
      */
-    const DB_NAME = "testAPI";
+    const DB_NAME = "FeelingsDiary";
 
     /**
      * @var mysqli|null Connexion mysqli
