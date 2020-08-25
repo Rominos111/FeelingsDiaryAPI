@@ -1,5 +1,13 @@
 Options +FollowSymLinks
 RewriteEngine On
+RewriteBase /
+
+# Redirige les actions
+# Exemple : https://api.r-thd.fr/FeelingsDiary/entry -> https://api.r-thd.fr/FeelingsDiary/actions/entry
+RewriteCond %{REQUEST_URI} !(api.r-thd.fr/actions)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*)$ https://api.r-thd.fr/FeelingsDiary/actions/$1 [R,L]
 
 # HTTPS
 RewriteCond %{HTTP_HOST} ^api.r-thd\.fr [NC]
