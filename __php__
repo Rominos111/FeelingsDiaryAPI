@@ -1,14 +1,19 @@
 <?php
 
+const ENABLE_FILES_VIEW = false;
+
+// Début de session
 session_start();
 
-// Affichage des message de débug
-ini_set("display_errors", 1);
+// Affichage des message de debug
+ini_set("display_errors", 0);
 ini_set("display_startup_errors", 1);
 error_reporting(E_ALL);
 
+// Ajout de /FeelingsDiary au path
 set_include_path(get_include_path() . PATH_SEPARATOR . $_SERVER["DOCUMENT_ROOT"] . "FeelingsDiary");
 
+// Headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE");
@@ -17,6 +22,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 
+// Gestion des méthodes PATCH et DELETE
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "PATCH":
         parse_str(file_get_contents('php://input'), $_PATCH);
@@ -30,4 +36,29 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 }
 
+// Fichiers généraux
 require_once "shared/database/Database.php";
+require_once "shared/response/Response.php";
+require_once "shared/response/ResponseCode.php";
+require_once "shared/response/ResponseType.php";
+
+// Gestion des erreurs fatales en envoyant une erreur 500
+function fatalErrorHandler() {
+    $last_error = error_get_last();
+
+    if ($last_error) {
+        if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR) {
+            header("HTTP/1.1 500 Internal Server Error");
+
+            $last_error["time"] = time();
+
+            if (!ENABLE_FILES_VIEW) {
+                unset($last_error["file"]);
+                unset($last_error["line"]);
+            }
+
+            echo json_encode($last_error);
+        }
+    }
+}
+register_shutdown_function('fatalErrorHandler');
