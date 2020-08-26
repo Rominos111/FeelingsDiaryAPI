@@ -31,7 +31,7 @@ class Database {
     /**
      * Getter de l'instance
      *
-     * @throws DatabaseConnectionException Si la BDD n'arrive pas à se connecter
+     * @return mysqli Instance SQL
      */
     public static function getInstance() : mysqli {
         if (!self::isConnected()) {
@@ -45,14 +45,9 @@ class Database {
      * Crée une connexion à la base de donnée
      *
      * @return void
-     *
-     * @throws DatabaseConnectionException Si la DB n'arrive pas à se connecter
      */
     public static function connect() : void {
-        if (self::isConnected()) {
-            echo "déjà connecté";
-        }
-        else {
+        if (!self::isConnected()) {
             // Importation des identifiants de la base
             require_once("config/db-config.php");
 
@@ -63,12 +58,14 @@ class Database {
 
             unset($_SESSION["db"]);
 
-            self::$connection = mysqli_connect($host, $user, $password, $basename);
+            self::$connection = new mysqli($host, $user, $password, $basename);
 
-            if (self::$connection === false) {
-                throw new DatabaseConnectionException("Database connection failed.", 1);
-            } else {
-                mysqli_set_charset(self::$connection, "utf8");
+            if (self::$connection->connect_errno) {
+                error_log("Database connection failed.", 0);
+                trigger_error("Failed to connect to MySQL: " . self::$connection->connect_error, E_USER_ERROR);
+            }
+            else {
+                self::$connection->set_charset("utf8");
             }
         }
     }
