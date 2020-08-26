@@ -1,13 +1,18 @@
 Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /
+DirectorySlash Off
 
-# Redirige les actions
-# Exemple : https://api.r-thd.fr/FeelingsDiary/entry -> https://api.r-thd.fr/FeelingsDiary/actions/entry
-RewriteCond %{REQUEST_URI} !(api.r-thd.fr/actions)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule (.*)$ https://api.r-thd.fr/FeelingsDiary/actions/$1 [R,L]
+# Les fichiers sont considérés comme des fichiers php par défaut
+DefaultType application/x-httpd-php
+
+# Les index sont les fichiers index et index.html
+# DirectoryIndex index index.html index.php
+
+# Suppression de l'extension
+RewriteRule ^(.+)\.php$ /FeelingsDiary/$1 [R,L]
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*?)/?$ /FeelingsDiary/$1.php [NC,END]
 
 # HTTPS
 RewriteCond %{HTTP_HOST} ^api.r-thd\.fr [NC]
