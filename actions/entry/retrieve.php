@@ -1,6 +1,7 @@
 <?php
 
 require_once "__php__";
+require_once "objects/Entry.php";
 
 if ($_SERVER["REQUEST_METHOD"] != "GET") {
     $response = new Response(ResponseCode::METHOD_NOT_ALLOWED, array("method" => $_SERVER["REQUEST_METHOD"]));
