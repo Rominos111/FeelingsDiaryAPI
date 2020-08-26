@@ -7,6 +7,8 @@
 
 namespace Lcobucci\JWT\Signer;
 
+require_once  __DIR__ . "/OpenSSL.php";
+
 use const OPENSSL_KEYTYPE_RSA;
 
 /**
