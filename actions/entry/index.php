@@ -1,23 +1,22 @@
 <?php
 
-require "__php__";
-require_once "objects/Entry.php";
+require_once "__php__";
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
-        require_once "operations/retrieve.php";
+        require_once "retrieve.php";
         break;
 
     case "POST":
-        require_once "operations/create.php";
+        require_once "create.php";
         break;
 
     case "PATCH":
-        require_once "operations/update.php";
+        require_once "update.php";
         break;
 
     case "DELETE":
-        require_once "operations/delete.php";
+        require_once "delete.php";
         break;
 
     default:
