@@ -10,9 +10,9 @@
  */
 class Response {
     /**
-     * @var array Contenu
+     * @var array|null Contenu
      */
-    private array $content;
+    private ?array $content;
 
     /**
      * @var int Type de réponse
@@ -28,11 +28,11 @@ class Response {
     /**
      * Constructeur
      *
-     * @param array $content Contenu de la réponse
      * @param int $code Code réponse (200, 401...)
+     * @param array|null $content Contenu de la réponse
      * @param int $responseType Type de réponse (JSON, XML...)
      */
-    public function __construct(array $content, int $code, int $responseType = ResponseType::JSON) {
+    public function __construct(int $code, ?array $content = null, int $responseType = ResponseType::JSON) {
         $this->content = $content;
         $this->code = $code;
         $this->responseType = $responseType;
@@ -72,7 +72,11 @@ class Response {
         $response = array();
         $response["errorCode"] = $code;
         $response["message"] = $message;
-        $response["content"] = $this->content;
+
+        if (!is_null($this->content)) {
+            $response["content"] = $this->content;
+        }
+
         return json_encode($response);
     }
 
