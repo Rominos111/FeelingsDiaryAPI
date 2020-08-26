@@ -29,11 +29,11 @@ class Database {
     }
 
     /**
-     * Getter de l'instance
+     * Getter privé de l'instance
      *
      * @return mysqli Instance SQL
      */
-    public static function getInstance() : mysqli {
+    private static function getInstance() : mysqli {
         if (!self::isConnected()) {
             self::connect();
         }
@@ -68,5 +68,59 @@ class Database {
                 self::$connection->set_charset("utf8");
             }
         }
+    }
+
+    /**
+     * Exécute une requête SQL et retourne une liste
+     *
+     * @param string $query Query SQL
+     * @param string|null $types Types à binder
+     * @param mixed ...$values Valeurs à binder
+     *
+     * @example executeAndGetArray("SELECT * FROM table_name WHERE arg1 = ? AND arg2 = ?", "ii", arg1, arg2);
+     * @example executeAndGetArray("SELECT * FROM table_name");
+     *
+     * @return array|null Liste, null si la requête a échoué
+     */
+    public static function executeAndGetArray(string $query, ?string $types = null, ...$values) : ?array {
+        $db = Database::getInstance();
+
+        $query = $db->prepare($query);
+
+        if (!is_null($types) && !is_null($values)) {
+            $query->bind_param($types, ...$values);
+        }
+
+        $query->execute();
+
+        $result = $query->get_result();
+        $query->close();
+
+        if ($result === false) {
+            return null;
+        }
+        else {
+            $data = $result->fetch_assoc();
+            return is_null($data) ? array() : $data;
+        }
+    }
+
+    /**
+     * Exécute une requête SQL
+     *
+     * @param string $query Query SQL
+     *
+     * @return bool
+     */
+    public static function executeOnly(string $query) : bool {
+        $db = Database::getInstance();
+
+        $query = $db->prepare($query);
+        $query->execute();
+
+        $result = $query->get_result();
+        $query->close();
+
+        return true;
     }
 }
