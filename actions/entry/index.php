@@ -1,6 +1,7 @@
 <?php
 
 require "__php__";
+require_once "objects/Entry.php";
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
