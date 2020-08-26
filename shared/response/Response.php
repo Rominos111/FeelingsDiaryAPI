@@ -15,36 +15,42 @@ class Response {
     private array $content;
 
     /**
-     * @var ResponseType Type de réponse
+     * @var int Type de réponse
      * @see ResponseType
      */
-    private ResponseType $responseType;
+    private int $responseType;
 
     /**
-     * @var ResponseCode Code réponse
+     * @var int Code réponse
      */
-    private ResponseCode $code;
+    private int $code;
 
     /**
      * Constructeur
      *
      * @param array $content Contenu de la réponse
-     * @param ResponseType $responseType Type de réponse (JSON, XML...)
-     * @param ResponseCode $code Code réponse (200, 401...)
+     * @param int $code Code réponse (200, 401...)
+     * @param int $responseType Type de réponse (JSON, XML...)
      */
-    public function __construct(array $content, ResponseType $responseType, ResponseCode $code) {
+    public function __construct(array $content, int $code, int $responseType = ResponseType::JSON) {
         $this->content = $content;
-        $this->responseType = $responseType;
         $this->code = $code;
+        $this->responseType = $responseType;
     }
 
-    public function send() : void {
+    /**
+     * Envoie la réponse
+     *
+     * @param int $code Code d'erreur
+     * @param string $message Message d'erreur
+     */
+    public function send(int $code = 0, string $message = "OK") : void {
         http_response_code($this->code);
 
         switch ($this->responseType) {
             case ResponseType::JSON:
             default:
-                echo($this->toJSON());
+                echo($this->toJSON($code, $message));
                 break;
 
             case ResponseType::XML:
@@ -62,8 +68,11 @@ class Response {
      *
      * @return string JSON
      */
-    private function toJSON() : string {
-        $response = array("content" => $this->content);
+    private function toJSON(int $code, string $message) : string {
+        $response = array();
+        $response["errorCode"] = $code;
+        $response["message"] = $message;
+        $response["content"] = $this->content;
         return json_encode($response);
     }
 
@@ -91,10 +100,11 @@ class Response {
     /**
      * Ajoute du contenu dans la réponse
      *
+     * @param string $name Nom de la catégorie à ajouter
      * @param array $content Contenu à ajouter
      */
-    public function addContent(array $content) : void {
-        array_push($this->content, $content);
+    public function addContent(string $name, array $content) : void {
+        $this->content[$name] = $content;
     }
 
     /**
@@ -112,6 +122,6 @@ class Response {
             }
         }
 
-        $this->addContent(array("missing" => $missing));
+        $this->addContent("missing", $missing);
     }
 }
