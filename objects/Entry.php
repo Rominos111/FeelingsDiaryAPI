@@ -97,20 +97,14 @@ class Entry implements CastToArray {
      * Constructeur par ID
      *
      * @param int $id
+     *
      * @return Entry|null Entry
      */
-    public static function getByID(int $id) : ?self {
-        $db = Database::getInstance();
+    public static function getById(int $id) : ?self {
+        $sql = "SELECT * FROM " . Database::DB_NAME . "." . self::TABLE_NAME . " WHERE id = ?";
+        $resourceData = Database::executeAndGetArray($sql, "i", $id);
 
-        $query = $db->prepare("SELECT * FROM " . Database::DB_NAME . "."  . self::TABLE_NAME . " WHERE id = ?");
-        $query->bind_param("i", $id);
-        $query->execute();
-
-        $result = $query->get_result();
-        $query->close();
-        $resourceData = $result->fetch_assoc();
-
-        if ($resourceData === null) {
+        if (empty($resourceData)) {
             return null;
         }
         else {
