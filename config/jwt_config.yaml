@@ -1,0 +1,24 @@
+# Issuer (server), keep empty to use $_SERVER["HTTP_HOST"]
+iss:
+
+# Audience (user agent), keep empty to use $_SERVER["HTTP_USER_AGENT"];
+aud:
+
+# Subject (IP address), keep empty to use $_SERVER["REMOTE_ADDR"];
+sub:
+
+# Refresh token
+refresh:
+    # Expiration delay for refresh tokens
+    exp:
+
+    # Key used to sign refresh tokens
+    key:
+
+# Request token
+request:
+    # Expiration delay for request tokens
+    exp:
+
+    # Key used to sign request tokens
+    key:
