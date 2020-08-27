@@ -1,5 +1,9 @@
 <?php
 
+require_once "__php__";
+
+require_once "shared/YAML.php";
+
 /**
  * Class Database, singleton
  *
@@ -10,7 +14,7 @@
  */
 class Database {
     /**
-     * Nom de la BDD
+     * @var string Nom de la BDD
      */
     const DB_NAME = "FeelingsDiary";
 
@@ -49,16 +53,15 @@ class Database {
     public static function connect() : void {
         if (!self::isConnected()) {
             // Importation des identifiants de la base
-            require_once("config/db-config.php");
 
-            $host = $_SESSION["db"]["host"];
-            $user = $_SESSION["db"]["user"];
-            $password = $_SESSION["db"]["password"];
-            $basename = $_SESSION["db"]["basename"];
+            $config = YAML::loadFromFile($_ENV["ROOT_PATH"] . "config/db_config.yaml");
 
-            unset($_SESSION["db"]);
+            $host = $config["host"];
+            $user = $config["user"];
+            $password = $config["password"];
+            // self::$DB_NAME = $config["basename"];
 
-            self::$connection = new mysqli($host, $user, $password, $basename);
+            self::$connection = new mysqli($host, $user, $password, self::DB_NAME);
 
             if (self::$connection->connect_errno) {
                 error_log("Database connection failed.", 0);
