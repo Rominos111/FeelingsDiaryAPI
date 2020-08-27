@@ -15,42 +15,65 @@ class Response {
     private ?array $content;
 
     /**
+     * @var array|null Paramètres manquants
+     */
+    private ?array $missing;
+
+    /**
      * @var int Type de réponse
      * @see ResponseType
      */
     private int $responseType;
 
     /**
-     * @var int Code réponse
+     * @var int Code réponse HTTP (200, 401...)
+     * @see ResponseCode
      */
-    private int $code;
+    private int $httpCode;
+
+    /**
+     * @var int Code d'erreur custom
+     */
+    private int $customCode;
+
+    /**
+     * @var string Message d'erreur
+     */
+    private string $message;
 
     /**
      * Constructeur
      *
-     * @param int $code Code réponse (200, 401...)
+     * @param int $httpCode Code réponse (200, 401...)
      * @param array|null $content Contenu de la réponse
+     * @param int $customCode Code d'erreur
+     * @param string $message Message d'erreur
      * @param int $responseType Type de réponse (JSON, XML...)
      */
-    public function __construct(int $code, ?array $content = null, int $responseType = ResponseType::JSON) {
+    public function __construct(int $httpCode = ResponseCode::OK,
+                                ?array $content = null,
+                                int $customCode = 0,
+                                string $message = "OK",
+                                int $responseType = ResponseType::JSON) {
+        $this->httpCode = $httpCode;
         $this->content = $content;
-        $this->code = $code;
+        $this->customCode = $customCode;
+        $this->message = $message;
         $this->responseType = $responseType;
     }
 
     /**
      * Envoie la réponse
      *
-     * @param int $code Code d'erreur
-     * @param string $message Message d'erreur
+     * @param bool $exitAfter Si le programme doit se terminer ensuite ou non
      */
-    public function send(int $code = 0, string $message = "OK") : void {
-        http_response_code($this->code);
+    public function send(bool $exitAfter = true) : void {
+        http_response_code($this->httpCode);
 
         switch ($this->responseType) {
             case ResponseType::JSON:
             default:
-                echo($this->toJSON($code, $message));
+                echo($this->toJSON());
                 break;
 
             case ResponseType::XML:
@@ -61,6 +84,10 @@ class Response {
                 echo($this->toHTML());
                 break;
         }
+
+        if ($exitAfter) {
+            exit();
+        }
     }
 
     /**
@@ -68,18 +95,18 @@ class Response {
      *
      * @return string JSON
      */
-    private function toJSON(int $code, string $message) : string {
+    private function toJSON() : string {
         $response = array();
-        $response["errorCode"] = $code;
-        $response["message"] = $message;
+        $response["errorCode"] = $this->customCode;
+        $response["message"] = $this->message;
+        $response["content"] = is_null($this->content) ? "" : $this->content;
 
-        if (!is_null($this->content)) {
-            $response["content"] = $this->content;
+        if (isset($this->missing)) {
+            $response["missing"] = $this->missing;
         }
 
         return json_encode($response);
     }
-
 
     /**
      * TODO Convertit la réponse en XML
@@ -111,21 +138,15 @@ class Response {
         $this->content[$name] = $content;
     }
 
-    /**
-     * Methode qui ajoute en contenu les arguments manquants de la requête
-     *
-     * @param array $required Liste des arguments nécessaires à la requête
-     * @param array $given Liste des arguments fournis
-     */
-    public function addMissingArguments(array $required, array $given) : void {
-        $missing = array();
+    public static function missingArgumentsFromArray(array $missing) : self {
+        return self::missingArguments(...$missing);
+    }
 
-        foreach ($required as $arg) {
-            if (empty($given[$arg])) {
-                array_push($missing, $arg);
-            }
-        }
-
-        $this->addContent("missing", $missing);
+    public static function missingArguments(...$missing) : self {
+        $response = new Response(ResponseCode::UNPROCESSABLE_ENTITY);
+        $response->missing = $missing;
+        $response->message = "Missing arguments";
+        $response->customCode = 1;
+        return $response;
     }
 }

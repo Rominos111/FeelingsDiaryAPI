@@ -64,7 +64,7 @@ abstract class ResponseCode {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Fichier trop gros, requête malformée, etc
+     * Requête malformée, syntaxe incorrecte
      */
     public const BAD_REQUEST = 400;
 
@@ -99,14 +99,24 @@ abstract class ResponseCode {
     public const CONFLICT = 409;
 
     /**
-     * Ressource qui existait mais qui n'existe plus
+     * La ressource existait mais n'existe plus
      */
     public const GONE = 410;
 
     /**
-     * Trop volumineux
+     * Charge trop volumineuse
      */
     public const PAYLOAD_TOO_LARGE = 413;
+
+    /**
+     * Type de contenu incompris
+     */
+    public const UNSUPPORTED_MEDIA_TYPE = 415;
+
+    /**
+     * Requête valide mais condition supplémentaire invalide (argument manquant, mot de passe trop court...)
+     */
+    public const UNPROCESSABLE_ENTITY = 422;
 
     /**
      * Trop de requêtes
