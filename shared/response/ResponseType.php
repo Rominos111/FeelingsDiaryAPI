@@ -25,4 +25,11 @@ abstract class ResponseType {
      * @deprecated Pas encore implémenté
      */
     public const XML = 2;
+
+    /**
+     * YAML
+     *
+     * @deprecated Pas encore implémenté
+     */
+    public const YAML = 3;
 }
