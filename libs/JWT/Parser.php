@@ -7,6 +7,8 @@
 
 namespace Lcobucci\JWT;
 
+require_once __DIR__ . "/Parsing/Decoder.php";
+
 use InvalidArgumentException;
 use Lcobucci\JWT\Claim\Factory as ClaimFactory;
 use Lcobucci\JWT\Parsing\Decoder;
