@@ -1,5 +1,26 @@
 <?php
 
+// Gestion des erreurs fatales en envoyant une erreur 500
+function fatalErrorHandler() {
+    $last_error = error_get_last();
+
+    if ($last_error) {
+        if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR) {
+            header("HTTP/1.1 500 Internal Server Error");
+
+            $last_error["time"] = time();
+
+            if (!ENABLE_FILES_VIEW) {
+                unset($last_error["file"]);
+                unset($last_error["line"]);
+            }
+
+            echo json_encode($last_error);
+        }
+    }
+}
+register_shutdown_function('fatalErrorHandler');
+
 const ENABLE_FILES_VIEW = false;
 
 // Début de session
@@ -12,6 +33,7 @@ error_reporting(E_ALL);
 
 // Ajout de /FeelingsDiary au path
 set_include_path(get_include_path() . PATH_SEPARATOR . $_SERVER["DOCUMENT_ROOT"] . "FeelingsDiary");
+$_ENV["ROOT_PATH"] = $_SERVER["DOCUMENT_ROOT"] . "FeelingsDiary" . DIRECTORY_SEPARATOR;
 
 // Headers
 header("Access-Control-Allow-Origin: *");
@@ -56,23 +78,28 @@ require_once "shared/response/Response.php";
 require_once "shared/response/ResponseCode.php";
 require_once "shared/response/ResponseType.php";
 
-// Gestion des erreurs fatales en envoyant une erreur 500
-function fatalErrorHandler() {
-    $last_error = error_get_last();
+if (isset($_ENV["ALLOWED_METHODS"])) {
+    $ok = false;
 
-    if ($last_error) {
-        if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR) {
-            header("HTTP/1.1 500 Internal Server Error");
-
-            $last_error["time"] = time();
-
-            if (!ENABLE_FILES_VIEW) {
-                unset($last_error["file"]);
-                unset($last_error["line"]);
+    if (is_array($_ENV["ALLOWED_METHODS"])) {
+        foreach ($_ENV["ALLOWED_METHODS"] as $value) {
+            if ($value === $_SERVER["REQUEST_METHOD"]) {
+                $ok = true;
             }
-
-            echo json_encode($last_error);
         }
     }
+    else if (is_string($_ENV["ALLOWED_METHODS"])) {
+        $ok = ($_ENV["ALLOWED_METHODS"] === $_SERVER["REQUEST_METHOD"]);
+    }
+
+    if (!$ok) {
+        Response::builder()
+            ->setHttpCode(ResponseCode::METHOD_NOT_ALLOWED)
+            ->setPayload(
+                array("method" => $_SERVER["REQUEST_METHOD"])
+            )
+            ->setCustomCode(1)
+            ->setMessage("Method not allowed, like using POST in a GET-only request")
+            ->send();
+    }
 }
-register_shutdown_function('fatalErrorHandler');
