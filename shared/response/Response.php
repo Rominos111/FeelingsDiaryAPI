@@ -12,7 +12,7 @@ class Response {
     /**
      * @var array|null Contenu
      */
-    private ?array $content = null;
+    private ?array $payload = null;
 
     /**
      * @var array|null Paramètres manquants
@@ -78,12 +78,12 @@ class Response {
     /**
      * Set le contenu de la réponse
      *
-     * @param array $content Contenu de la réponse
+     * @param array $payload Contenu de la réponse
      *
      * @return $this This
      */
-    public function setContent(array $content) : self {
-        $this->content = $content;
+    public function setPayload(array $payload) : self {
+        $this->payload = $payload;
         return $this;
     }
 
@@ -123,7 +123,7 @@ class Response {
         $response = array();
         $response["errorCode"] = $this->customCode;
         $response["message"] = $this->message;
-        $response["content"] = is_null($this->content) ? "" : $this->content;
+        $response["payload"] = is_null($this->payload) ? "" : $this->payload;
 
         if (!is_null($this->missing)) {
             $response["missing"] = $this->missing;
@@ -150,6 +150,8 @@ class Response {
     /**
      * Convertit la réponse en JSON
      *
+     * @param array $response Réponse à envoyer
+     *
      * @return string JSON
      */
     private function toJSON(array $response) : string {
@@ -165,7 +167,7 @@ class Response {
      * @return self This
      */
     public function addContent(string $name, array $content) : self {
-        $this->content[$name] = $content;
+        $this->payload[$name] = $content;
         return $this;
     }
 
@@ -188,10 +190,32 @@ class Response {
      * @return Response Réponse
      */
     public static function missingArguments(...$missing) : self {
-        $response = self::builder()
+        return self::builder()
             ->setHttpCode(ResponseCode::UNPROCESSABLE_ENTITY)
-            ->setMessage("Missing arguments");
-        $response->missing = $missing;
-        return $response;
+            ->setMessage("Missing arguments")
+            ->setPayload(array("missing" => $missing));
+    }
+
+    /**
+     * Type d'argument invalide
+     *
+     * @param string $varName Nom de la variable
+     * @param mixed $var Variable invalide
+     * @param mixed $required Exemple d'un type valide (ex: "", 0, array()...)
+     *
+     * @return static Réponse
+     */
+    public static function wrongDataType(string $varName, $var, $required) : self {
+        return self::builder()
+            ->setHttpCode(ResponseCode::UNPROCESSABLE_ENTITY)
+            ->setMessage("Wrong data types")
+            ->setPayload(array(
+                "received" => array(
+                    $varName => gettype($var)
+                ),
+                "expected" => array(
+                    $varName => gettype($required)
+                )
+            ));
     }
 }

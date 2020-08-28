@@ -15,7 +15,7 @@ if (isset($_GET)) {
                 if (!is_null($entry)) {
                     if ($entry->getUserID() === JWT::getUserID($_GET["token"])) {
                         Response::builder()
-                            ->setContent($entry->toArray())
+                            ->setPayload($entry->toArray())
                             ->send();
                     }
                     else {
