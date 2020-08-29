@@ -142,6 +142,19 @@ class Response {
 
         }
 
+        require_once "shared/response/responseHeaders.php";
+
+        /*
+        header(
+            "Status: "
+            . $this->httpCode
+            . " "
+            . ResponseCode::getCodeName($this->httpCode)
+            , true);
+        */
+
+        header("Status: " . $this->httpCode, true);
+
         if ($exitAfter) {
             exit();
         }
@@ -179,7 +192,10 @@ class Response {
      * @return Response Réponse
      */
     public static function missingArgumentsFromArray(array $missing) : self {
-        return self::missingArguments(...$missing);
+        return self::builder()
+            ->setHttpCode(ResponseCode::UNPROCESSABLE_ENTITY)
+            ->setMessage("Missing arguments")
+            ->setPayload(array("missing" => $missing));
     }
 
     /**
@@ -190,10 +206,7 @@ class Response {
      * @return Response Réponse
      */
     public static function missingArguments(...$missing) : self {
-        return self::builder()
-            ->setHttpCode(ResponseCode::UNPROCESSABLE_ENTITY)
-            ->setMessage("Missing arguments")
-            ->setPayload(array("missing" => $missing));
+        return self::missingArgumentsFromArray($missing);
     }
 
     /**
@@ -216,6 +229,22 @@ class Response {
                 "expected" => array(
                     $varName => gettype($required)
                 )
+            ));
+    }
+
+    /**
+     * Syntaxe d'argument invalide
+     *
+     * @param string $varName Nom de la variable
+     *
+     * @return static Réponse
+     */
+    public static function wrongDataSyntax(string $varName) : self {
+        return self::builder()
+            ->setHttpCode(ResponseCode::BAD_REQUEST)
+            ->setMessage("Wrong data syntax")
+            ->setPayload(array(
+                "errored" => $varName
             ));
     }
 }
