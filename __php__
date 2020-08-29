@@ -1,12 +1,17 @@
 <?php
 
-// Gestion des erreurs fatales en envoyant une erreur 500
+/**
+ * Autorise la vue des fichiers ou non
+ */
+const ENABLE_FILES_VIEW = false;
+
+// Gestion des erreurs fatales en envoyant une erreur 500 et en détaillant le problème en JSON
 function fatalErrorHandler() {
     $last_error = error_get_last();
 
     if ($last_error) {
-        if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR) {
-            header("HTTP/1.1 500 Internal Server Error");
+        if ($last_error["type"] == E_ERROR || $last_error["type"] == E_USER_ERROR) {
+            header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal Server Error");
 
             $last_error["time"] = time();
 
@@ -19,9 +24,9 @@ function fatalErrorHandler() {
         }
     }
 }
-register_shutdown_function('fatalErrorHandler');
+register_shutdown_function("fatalErrorHandler");
 
-const ENABLE_FILES_VIEW = false;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Début de session
 session_start();
@@ -35,20 +40,71 @@ error_reporting(E_ALL);
 set_include_path(get_include_path() . PATH_SEPARATOR . $_SERVER["DOCUMENT_ROOT"] . "FeelingsDiary");
 $_ENV["ROOT_PATH"] = $_SERVER["DOCUMENT_ROOT"] . "FeelingsDiary" . DIRECTORY_SEPARATOR;
 
-// Headers
-header("Access-Control-Allow-Origin: *");
-header("Accept: application/json");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Headers généraux
+
+// Authentification nécessaire, Bearer = via token, realm = description
+header("WWW-Authenticate: Bearer, charset='UTF-8'");
+
+// TODO: header "Age:"
+// TODO: Ajouter un age + gestion public / privé + storable ou non
 header("Cache-Control: no-cache, must-revalidate");
+// TODO: header "Expires:"
+// Header générique de cache
 header("Pragma: no-cache");
+
+// TODO: header "ETag:" + header "If-Match:"
+
+// Garde la connexion ouverte une fois terminée pour d'éventuelles autres requêtes
+header("Connection: keep-alive");
+// Garde la connexion pour au moins 5 secondes et pour au plus 100 requêtes par connexion
+header("Keep-Alive: timeout=5, max=100");
+
+// Headers HTTP autorisés
+header("Access-Control-Allow-Headers: Content-Type, Accept, Authorization");
+// Le client ne doit accepter que depuis ce serveur
+header("Access-Control-Allow-Origin: " . $_SERVER["SERVER_NAME"]);
+// Cache maximal
+header("Access-Control-Max-Age: 3600");
+// Header set plus tard
+header("Access-Control-Allow-Methods: *");
+// Origine
+header("Origin: " . (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"]);
+
+// Tracking, '!" : under construction, 'N' : not tracking, 'T' : tracking
+header("Tk: !");
+
+// Langage du contenu
+header("Content-Language: en");
+// Type de contenu
+header("Content-Type: application/json; charset=UTF-8");
+
+// Host
+header("Host: " . $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"]);
+// TODO: header "User-Agent:"
+
+// Méthodes autorisées
+header("Allow: *");
+
+// Protège des failles XSS et autres en n'autorisant que depuis ce serveur. Variante : "default-src 'self'"
+header("Content-Security-Policy: default-src " . $_SERVER["SERVER_NAME"]);
+// Le client ne doit accepter que depuis ce serveur
+header("Cross-Origin-Resource-Policy: same-site");
+// Force l'utilisation de HTTPS pendant encore 2 ans et bloque HTTP
+header("Strict-Transport-Security: max-age=63072000; includeSubDomains; preload");
+// Le type de contenu est bien le bon même si le type MIME ne correspond pas
+header("X-Content-Type-Options: nosniff");
+// Refuse l'intégration dans des iframe
+header("X-Frame-Options: DENY");
+// Bloque toutes les requêtes XSS
+header("X-XSS-Protection: 1; mode=block");
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Gestion des méthodes PATCH et DELETE
 
 $_PATCH = null;
 $_DELETE = null;
 
-// Gestion des méthodes PATCH et DELETE
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "POST":
         if (empty($_POST)) {
@@ -65,24 +121,35 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 
     case "DELETE":
-        parse_str(file_get_contents('php://input'), $_DELETE);
+        // parse_str(file_get_contents('php://input'), $_DELETE);
+        $_DELETE = json_decode(file_get_contents('php://input'), true);
         break;
 
     default:
         break;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Fichiers généraux
+
+require_once "shared/JWT/JWT.php";
+require_once "shared/JWT/JWTResponse.php";
 require_once "shared/database/Database.php";
 require_once "shared/response/Response.php";
 require_once "shared/response/ResponseCode.php";
 require_once "shared/response/ResponseType.php";
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Gestion des méthodes autorisées
+
 if (isset($_ENV["ALLOWED_METHODS"])) {
     $ok = false;
+    $methods = "";
 
     if (is_array($_ENV["ALLOWED_METHODS"])) {
         foreach ($_ENV["ALLOWED_METHODS"] as $value) {
+            $methods .= $value . ", ";
+
             if ($value === $_SERVER["REQUEST_METHOD"]) {
                 $ok = true;
             }
@@ -90,7 +157,15 @@ if (isset($_ENV["ALLOWED_METHODS"])) {
     }
     else if (is_string($_ENV["ALLOWED_METHODS"])) {
         $ok = ($_ENV["ALLOWED_METHODS"] === $_SERVER["REQUEST_METHOD"]);
+        $methods .= $_ENV["ALLOWED_METHODS"] . ", ";
     }
+
+    $methods = substr($methods, 0, -2);
+
+    // Méthodes autorisées
+    header("Allow: $methods", true);
+    // Méthodes autorisées
+    header("Access-Control-Allow-Methods: $methods", true);
 
     if (!$ok) {
         Response::builder()
