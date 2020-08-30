@@ -46,6 +46,38 @@ class Database {
     }
 
     /**
+     * Récupère un objet Résultat d'une query
+     *
+     * @param string $query Query
+     * @param string|null $types Types à binder
+     * @param mixed ...$values Valeurs à binder
+     * @param mysqli|null $db Connexion à utiliser
+     *
+     * @return mysqli_result|null Objet Résultat, null si erreur dans la query
+     */
+    private static function getStatementResult(string $query,
+                                               ?string $types,
+                                               array $values,
+                                               mysqli $db=null) : ?mysqli_result {
+        if (is_null($db)) {
+            $db = Database::getInstance();
+        }
+
+        $stmt = $db->prepare($query);
+
+        if (!is_null($types) && !is_null($values)) {
+            $stmt->bind_param($types, ...$values);
+        }
+
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        return ($result === false) ? null : $result;
+    }
+
+    /**
      * Crée une connexion à la base de donnée
      *
      * @return void
@@ -86,25 +118,27 @@ class Database {
      * @return array|null Liste, null si la requête a échoué
      */
     public static function executeAndGetArray(string $query, ?string $types = null, ...$values) : ?array {
-        $db = Database::getInstance();
+        $result = self::getStatementResult($query, $types, $values);
 
-        $query = $db->prepare($query);
-
-        if (!is_null($types) && !is_null($values)) {
-            $query->bind_param($types, ...$values);
-        }
-
-        $query->execute();
-
-        $result = $query->get_result();
-        $query->close();
-
-        if ($result === false) {
+        if (is_null($result)) {
             return null;
         }
         else {
-            $data = $result->fetch_assoc();
-            return is_null($data) ? array() : $data;
+            $res = array();
+
+            while ($data = $result->fetch_assoc()) {
+                $res[] = $data;
+            }
+
+            if (is_null($res)) {
+                return null;
+            }
+            else if (count($res) === 1) {
+                return $res[0];
+            }
+            else {
+                return $res;
+            }
         }
     }
 
@@ -112,18 +146,27 @@ class Database {
      * Exécute une requête SQL
      *
      * @param string $query Query SQL
+     * @param string|null $types Types à binder
+     * @param mixed ...$values Valeurs à binder
      *
-     * @return bool
+     * @return bool OK ou non
      */
-    public static function executeOnly(string $query) : bool {
+    public static function executeOnly(string $query, ?string $types = null, ...$values) : bool {
+        return is_null(self::getStatementResult($query, $types, $values));
+    }
+
+    /**
+     * Exécute une requête SQL
+     *
+     * @param string $query Query SQL
+     * @param string|null $types Types à binder
+     * @param mixed ...$values Valeurs à binder
+     *
+     * @return int ID
+     */
+    public static function executeAndGetID(string $query, ?string $types = null, ...$values) : ?int {
         $db = Database::getInstance();
-
-        $query = $db->prepare($query);
-        $query->execute();
-
-        $result = $query->get_result();
-        $query->close();
-
-        return true;
+        self::getStatementResult($query, $types, $values, $db);
+        return $db->insert_id;
     }
 }
