@@ -72,7 +72,7 @@ abstract class JWT {
         try {
             return (new Parser())->parse($token);
         }
-        catch (InvalidArgumentException $e) {
+        catch (Exception $e) {
             return null;
         }
     }
