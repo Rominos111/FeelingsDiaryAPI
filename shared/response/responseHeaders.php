@@ -4,7 +4,8 @@
 // Headers généraux
 
 // Authentification nécessaire, Bearer = via token, realm = description
-header("WWW-Authenticate: Bearer, charset='UTF-8'");
+// TODO:
+// header("WWW-Authenticate: Bearer, charset='UTF-8'");
 
 // TODO: header "Age:"
 // TODO: Ajouter un age + gestion public / privé + storable ou non

@@ -118,8 +118,6 @@ class Response {
      * @param bool $exitAfter Si le programme doit se terminer ensuite ou non
      */
     public function send(bool $exitAfter = true) : void {
-        http_response_code($this->httpCode);
-
         $response = array();
         $response["errorCode"] = $this->customCode;
         $response["message"] = $this->message;
@@ -127,19 +125,6 @@ class Response {
 
         if (!is_null($this->missing)) {
             $response["missing"] = $this->missing;
-        }
-
-        switch ($this->responseType) {
-            case ResponseType::JSON:
-            default:
-                echo($this->toJSON($response));
-                break;
-
-            case ResponseType::XML:
-            case ResponseType::HTML:
-            case ResponseType::YAML:
-                break;
-
         }
 
         require_once "shared/response/responseHeaders.php";
@@ -154,6 +139,21 @@ class Response {
         */
 
         header("Status: " . $this->httpCode, true);
+
+        http_response_code($this->httpCode);
+
+        switch ($this->responseType) {
+            case ResponseType::JSON:
+            default:
+                echo($this->toJSON($response));
+                break;
+
+            case ResponseType::XML:
+            case ResponseType::HTML:
+            case ResponseType::YAML:
+                break;
+
+        }
 
         if ($exitAfter) {
             exit();
