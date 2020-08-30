@@ -12,6 +12,8 @@ function fatalErrorHandler() {
     if ($last_error) {
         if ($last_error["type"] == E_ERROR || $last_error["type"] == E_USER_ERROR) {
             header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal Server Error");
+            header("Content-Type: application/json; charset=UTF-8");
+            http_response_code(ResponseCode::INTERNAL_SERVER_ERROR);
 
             $last_error["time"] = time();
 
@@ -21,6 +23,7 @@ function fatalErrorHandler() {
             }
 
             echo json_encode($last_error);
+            exit();
         }
     }
 }
