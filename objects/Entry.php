@@ -2,6 +2,9 @@
 
 require_once "shared/CastToArray.php";
 
+require_once "objects/User.php";
+require_once "objects/exceptions/UserNotFoundException.php";
+
 /**
  * Classe Entry
  *
@@ -101,7 +104,7 @@ class Entry implements CastToArray {
      * @return Entry|null Entry
      */
     public static function getById(int $id) : ?self {
-        $sql = "SELECT * FROM " . Database::DB_NAME . "." . self::TABLE_NAME . " WHERE id = ?";
+        $sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE id = ?";
         $resourceData = Database::executeAndGetArray($sql, "i", $id);
 
         if (empty($resourceData)) {
@@ -115,5 +118,36 @@ class Entry implements CastToArray {
                 $resourceData["user_id"]
             );
         }
+    }
+
+    /**
+     * Liste les entrées selon l'utilisateur
+     *
+     * @param int $uid User ID
+     *
+     * @return array Entrées, sous la forme [["id" => 1], ["id" => 4], ["id" => 7]]
+     */
+    public static function listByUserId(int $uid) : array {
+        $sql = "SELECT id FROM " . self::TABLE_NAME . " WHERE user_id = ?";
+        return Database::executeAndGetArray($sql, "i", $uid);
+    }
+
+    /**
+     * Crée une entrée
+     *
+     * @param string $content Contenu
+     * @param int $uid User ID
+     *
+     * @return int ID
+     *
+     * @throws UserNotFoundException
+     */
+    public static function create(string $content, int $uid) : ?int {
+        if (is_null(User::getById($uid))) {
+            throw new UserNotFoundException();
+        }
+
+        $sql = "INSERT INTO " . self::TABLE_NAME . " (content, user_id) VALUES (?, ?)";
+        return Database::executeAndGetID($sql, "si", $content, $uid);
     }
 }
