@@ -8,6 +8,6 @@ P'tite API PHP débile mais qui va servir à quelque chose
 
 <sub>Merci à Yohann pour l'[API du projet](https://github.com/ythepaut/info406_serveur), c'est top pour savoir comment commencer ;)</sub>
 
-⬇ Moi quand j'aurai enfin réussi mon système de jetons
+⬇ Moi quand j'ai enfin réussi mon système de jetons
 
-<img src="https://image.noelshack.com/fichiers/2016/48/1480546095-risitas-moine2.png" />
+<img src="https://image.noelshack.com/fichiers/2016/24/1466366681-risitas4.png" />
