@@ -139,4 +139,26 @@ abstract class ResponseCode {
      * Service indisponible
      */
     public const SERVICE_UNAVAILABLE = 503;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Récupère le nom d'une variable selon le code
+     *
+     * @param int $code Code
+     *
+     * @return string Nom de la variable associée
+     */
+    public static function getCodeName(int $code) : string {
+        // Réflexion
+        $vars = (new ReflectionClass(self::class))->getConstants();
+
+        foreach ($vars as $key => $value) {
+            if ($value === $code) {
+                return $key;
+            }
+        }
+
+        return "";
+    }
 }
