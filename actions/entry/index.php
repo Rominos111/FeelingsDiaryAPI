@@ -1,6 +1,6 @@
 <?php
 
-require_once "__php__";
+$_ENV["ALLOWED_METHODS"] = array("GET", "POST", "PATCH", "DELETE");
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
@@ -20,5 +20,6 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 
     default:
+        require_once "__php__";
         break;
 }

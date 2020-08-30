@@ -1,37 +1,45 @@
 <?php
 
-$_ENV["ALLOWED_METHODS"] = "GET";
+$_ENV["EXPECTED"] = array(
+    "methods" => "GET",
+    "args" => array(
+        "token" => ""
+    )
+);
+
 require_once "__php__";
 
 require_once "objects/Entry.php";
 
 JWTResponse::checkRequestToken($_GET["token"]);
 
-if (empty($_GET["id"])) {
-    Response::missingArguments("id")->send();
-}
+if (!is_null($_GET["id"]) && is_numeric($_GET["id"])) {
+    $entry = Entry::getById($_GET["id"]);
 
-if (!is_numeric($_GET["id"])) {
-    Response::wrongDataType("id", $_GET["id"], 0)->send();
-}
+    if (is_null($entry)) {
+        Response::builder()
+            ->setHttpCode(ResponseCode::NOT_FOUND)
+            ->setMessage("Entry not found")
+            ->send();
+    }
 
-$entry = Entry::getById($_GET["id"]);
+    // Mieux qu'un FORBIDDEN ?
+    if ($entry->getUserID() !== JWT::getUserID($_GET["token"])) {
+        Response::builder()
+            ->setHttpCode(ResponseCode::NOT_FOUND)
+            ->setMessage("Entry not found")
+            ->send();
+    }
 
-if (is_null($entry)) {
     Response::builder()
-        ->setHttpCode(ResponseCode::NOT_FOUND)
-        ->setMessage("Entry not found")
+        ->setPayload($entry->toArray())
         ->send();
 }
+else {
+    $uid = JWT::getUserID($_GET["token"]);
+    $entries = Entry::listByUserId($uid);
 
-// Mieux qu'un FORBIDDEN ?
-if ($entry->getUserID() !== JWT::getUserID($_GET["token"])) {
     Response::builder()
-        ->setHttpCode(ResponseCode::NOT_FOUND)
-        ->setMessage("Entry not found")
+        ->setPayload($entries)
         ->send();
 }
-
-Response::builder()
-    ->setPayload($entry->toArray())
-    ->send();

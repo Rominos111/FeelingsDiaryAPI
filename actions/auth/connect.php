@@ -1,6 +1,13 @@
 <?php
 
-$_ENV["ALLOWED_METHODS"] = "POST";
+$_ENV["EXPECTED"] = array(
+    "methods" => "POST",
+    "args" => array(
+        "username" => "",
+        "password" => ""
+    )
+);
+
 require_once "__php__";
 
 require_once "objects/User.php";
