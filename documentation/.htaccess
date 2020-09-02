@@ -1,1 +1,1 @@
-RewriteRule (.*)$ https://api.r-thd.fr/FeelingsDiary/docs/$1 [R,L]
+RewriteRule (.*)$ https://api.r-thd.fr/FeelingsDiary/docs/index.html [R,L]

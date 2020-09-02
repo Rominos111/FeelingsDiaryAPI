@@ -1,0 +1,547 @@
+{
+	"info": {
+		"_postman_id": "76c5da72-8dde-41f1-be77-d46f799a2636",
+		"name": "FeelingsDiaryAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "connect",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept-encoding": true,
+							"connection": true,
+							"content-length": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.r-thd.fr/FeelingsDiary/actions/auth/connect?username=username&password=password",
+							"protocol": "https",
+							"host": [
+								"api",
+								"r-thd",
+								"fr"
+							],
+							"path": [
+								"FeelingsDiary",
+								"actions",
+								"auth",
+								"connect"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "username",
+									"description": "Nom d'utilisateur"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"description": "Mot de passe"
+								}
+							]
+						},
+						"description": "Connect"
+					},
+					"response": [
+						{
+							"name": "Connexion échouée",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.r-thd.fr/FeelingsDiary/actions/auth/connect?username=username&password=password",
+									"protocol": "https",
+									"host": [
+										"api",
+										"r-thd",
+										"fr"
+									],
+									"path": [
+										"FeelingsDiary",
+										"actions",
+										"auth",
+										"connect"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "username",
+											"description": "Nom d'utilisateur"
+										},
+										{
+											"key": "password",
+											"value": "password",
+											"description": "Mot de passe"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 02 Sep 2020 11:54:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.41 (Ubuntu)"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=63072000; includeSubdomains"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=63072000; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Allow",
+									"value": "POST"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, Accept, Authorization"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "api.r-thd.fr"
+								},
+								{
+									"key": "Access-Control-Max-Age",
+									"value": "3600"
+								},
+								{
+									"key": "Origin",
+									"value": "https://api.r-thd.fr:443"
+								},
+								{
+									"key": "Tk",
+									"value": "!"
+								},
+								{
+									"key": "Content-Language",
+									"value": "en"
+								},
+								{
+									"key": "Host",
+									"value": "api.r-thd.fr:443"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src api.r-thd.fr"
+								},
+								{
+									"key": "Cross-Origin-Resource-Policy",
+									"value": "same-site"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Status",
+									"value": "401"
+								},
+								{
+									"key": "Content-Length",
+									"value": "76"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errorCode\": 1,\n    \"message\": \"Wrong user and password combination\",\n    \"payload\": \"\"\n}"
+						},
+						{
+							"name": "Argument manquant",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.r-thd.fr/FeelingsDiary/actions/auth/connect?username=romain",
+									"protocol": "https",
+									"host": [
+										"api",
+										"r-thd",
+										"fr"
+									],
+									"path": [
+										"FeelingsDiary",
+										"actions",
+										"auth",
+										"connect"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "romain",
+											"description": "Nom d'utilisateur"
+										}
+									]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 02 Sep 2020 12:02:35 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.41 (Ubuntu)"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=63072000; includeSubdomains"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=63072000; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Allow",
+									"value": "POST"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, Accept, Authorization"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "api.r-thd.fr"
+								},
+								{
+									"key": "Access-Control-Max-Age",
+									"value": "3600"
+								},
+								{
+									"key": "Origin",
+									"value": "https://api.r-thd.fr:443"
+								},
+								{
+									"key": "Tk",
+									"value": "!"
+								},
+								{
+									"key": "Content-Language",
+									"value": "en"
+								},
+								{
+									"key": "Host",
+									"value": "api.r-thd.fr:443"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src api.r-thd.fr"
+								},
+								{
+									"key": "Cross-Origin-Resource-Policy",
+									"value": "same-site"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Status",
+									"value": "422"
+								},
+								{
+									"key": "Content-Length",
+									"value": "89"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errorCode\": 1,\n    \"message\": \"Missing arguments\",\n    \"payload\": {\n        \"missing\": {\n            \"password\": \"string\"\n        }\n    }\n}"
+						},
+						{
+							"name": "Connexion réussie",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.r-thd.fr/FeelingsDiary/actions/auth/connect?username=romain&password=test",
+									"protocol": "https",
+									"host": [
+										"api",
+										"r-thd",
+										"fr"
+									],
+									"path": [
+										"FeelingsDiary",
+										"actions",
+										"auth",
+										"connect"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "romain",
+											"description": "Nom d'utilisateur"
+										},
+										{
+											"key": "password",
+											"value": "test",
+											"description": "Mot de passe"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 02 Sep 2020 12:01:10 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.41 (Ubuntu)"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=63072000; includeSubdomains"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=63072000; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Allow",
+									"value": "POST"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, Accept, Authorization"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "api.r-thd.fr"
+								},
+								{
+									"key": "Access-Control-Max-Age",
+									"value": "3600"
+								},
+								{
+									"key": "Origin",
+									"value": "https://api.r-thd.fr:443"
+								},
+								{
+									"key": "Tk",
+									"value": "!"
+								},
+								{
+									"key": "Content-Language",
+									"value": "en"
+								},
+								{
+									"key": "Host",
+									"value": "api.r-thd.fr:443"
+								},
+								{
+									"key": "Content-Security-Policy",
+									"value": "default-src api.r-thd.fr"
+								},
+								{
+									"key": "Cross-Origin-Resource-Policy",
+									"value": "same-site"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Status",
+									"value": "200"
+								},
+								{
+									"key": "Content-Length",
+									"value": "756"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"errorCode\": 0,\n    \"message\": \"OK\",\n    \"payload\": {\n        \"refreshToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImp0aSI6ImV4YW1wbGUifQ.eyJpc3MiOiJhcGkuci10aGQuZnIiLCJhdWQiOiJVc2VyQWdlbnQiLCJzdWIiOiIxOTIuMTY4LjEuMSIsImp0aSI6ImV4YW1wbGUiLCJpYXQiOjE1OTkwNDcxODEsIm5iZiI6MTU5OTA0NzE4MSwiZXhwIjoxNTk5MDkwMzgxLCJ1aWQiOjAsInR5cGUiOjF9.8jppAcuYT6oosYpMw5yag0WUBenIOf8oxLsoxh1qwpk\",\n        \"requestToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImp0aSI6ImV4YW1wbGUifQ.eyJpc3MiOiJhcGkuci10aGQuZnIiLCJhdWQiOiJVc2VyQWdlbnQiLCJzdWIiOiIxOTIuMTY4LjEuMSIsImp0aSI6ImV4YW1wbGUiLCJpYXQiOjE1OTkwNDcxODEsIm5iZiI6MTU5OTA0NzE4MSwiZXhwIjoxNTk5MDkwMzgxLCJ1aWQiOjAsInR5cGUiOjJ9.pXEI6VU8A-JFxmjZhfBkv-Dm4U5cukrAx131ZiR8agM\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Authentication",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"variable": [
+		{
+			"id": "baseUrl",
+			"key": "baseUrl",
+			"value": "https://api.r-thd.fr",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
