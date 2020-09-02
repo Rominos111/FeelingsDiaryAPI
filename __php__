@@ -91,12 +91,9 @@ assert(!is_null($_ENV["EXPECTED"]["methods"]));
 assert(!is_null($_ENV["EXPECTED"]["args"]));
 
 $ok = false;
-$methods = "";
 
 if (is_array($_ENV["EXPECTED"]["methods"])) {
     foreach ($_ENV["EXPECTED"]["methods"] as $value) {
-        $methods .= $value . ", ";
-
         if ($value === $_SERVER["REQUEST_METHOD"]) {
             $ok = true;
         }
@@ -104,15 +101,7 @@ if (is_array($_ENV["EXPECTED"]["methods"])) {
 }
 else if (is_string($_ENV["EXPECTED"]["methods"])) {
     $ok = ($_ENV["EXPECTED"]["methods"] === $_SERVER["REQUEST_METHOD"]);
-    $methods .= $_ENV["EXPECTED"]["methods"] . ", ";
 }
-
-$methods = substr($methods, 0, -2);
-
-// Méthodes autorisées
-header("Allow: $methods", true);
-// Méthodes autorisées
-header("Access-Control-Allow-Methods: $methods", true);
 
 if (!$ok) {
     Response::builder()

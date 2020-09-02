@@ -59,3 +59,27 @@ header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: DENY");
 // Bloque toutes les requêtes XSS
 header("X-XSS-Protection: 1; mode=block");
+
+
+
+assert(!is_null($_ENV["EXPECTED"]));
+assert(!is_null($_ENV["EXPECTED"]["methods"]));
+
+$methods = "";
+
+if (is_array($_ENV["EXPECTED"]["methods"])) {
+    foreach ($_ENV["EXPECTED"]["methods"] as $value) {
+        $methods .= $value . ", ";
+    }
+}
+else if (is_string($_ENV["EXPECTED"]["methods"])) {
+    $ok = ($_ENV["EXPECTED"]["methods"] === $_SERVER["REQUEST_METHOD"]);
+    $methods .= $_ENV["EXPECTED"]["methods"] . ", ";
+}
+
+$methods = substr($methods, 0, -2);
+
+// Méthodes autorisées
+header("Allow: $methods", true);
+// Méthodes autorisées
+header("Access-Control-Allow-Methods: $methods", true);
