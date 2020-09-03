@@ -101,7 +101,7 @@ class Feeling implements CastToArray {
      * @return Feeling|null Feeling
      */
     public static function getById(int $id) : ?self {
-        $sql = "SELECT * FROM " . Database::DB_NAME . "." . self::TABLE_NAME . " WHERE id = ?";
+        $sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE id = ?";
         $resourceData = Database::executeAndGetArray($sql, "i", $id);
 
         if (empty($resourceData)) {
