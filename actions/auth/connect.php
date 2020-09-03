@@ -37,8 +37,8 @@ $user = User::getByUsername($_POST["username"]);
 // Vérification existence user
 if (is_null($user)) {
     Response::builder()
-        ->setHttpCode(ResponseCode::NOT_FOUND)
-        ->setMessage("User not found")
+        ->setHttpCode(ResponseCode::UNAUTHORIZED)
+        ->setMessage("Wrong user and password combination")
         ->send();
 }
 
@@ -48,7 +48,7 @@ $canConnect = User::canConnect($_POST["username"], $_POST["password"]);
 if (!$canConnect) {
     Response::builder()
         ->setHttpCode(ResponseCode::UNAUTHORIZED)
-        ->setMessage("Wrong password")
+        ->setMessage("Wrong user and password combination")
         ->send();
 }
 
