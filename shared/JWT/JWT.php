@@ -115,6 +115,17 @@ abstract class JWT {
             ->withClaim("type", $tokenType)
             ->getToken(self::$signer, $key);
 
+        if ($tokenType == self::TOKEN_REFRESH) {
+            Database::executeOnly(
+                "INSERT INTO token VALUES (?, ?, ?, ?)",
+                "siis",
+                $jti,
+                $time,
+                $time + $exp,
+                $config["sub"]
+            );
+        }
+
         return (string) $token;
     }
 
@@ -199,6 +210,19 @@ abstract class JWT {
         return is_null($token) ? null : $token->verify(self::$signer, $key);
     }
 
+    public static function isTokenWhitelisted(string $token) : bool {
+        if (self::getTokenType($token) === self::TOKEN_REQUEST) {
+            return true;
+        }
+        else {
+            self::init();
+            $token = self::getTokenObject($token);
+            $jti = $token->getClaim("jti");
+            $res = Database::executeAndGetArray("SELECT jti FROM token WHERE jti = ?", "s", $jti);
+            return !empty($res);
+        }
+    }
+
     /**
      * Token valide ou non
      *
@@ -212,7 +236,8 @@ abstract class JWT {
             && self::isTokenIPValid($token)
             && self::isTokenUserAgentValid($token)
             && self::isTokenSignatureValid($token, $type)
-            && !self::isTokenExpired($token);
+            && !self::isTokenExpired($token)
+            && self::isTokenWhitelisted($token);
     }
 
     /**

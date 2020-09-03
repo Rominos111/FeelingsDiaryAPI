@@ -45,6 +45,13 @@ abstract class JWTResponse {
                 ->setHttpCode(ResponseCode::UNAUTHORIZED)
                 ->send();
         }
+
+        if (!JWT::isTokenWhitelisted($token)) {
+            Response::builder()
+                ->setMessage("Blacklisted token")
+                ->setHttpCode(ResponseCode::UNAUTHORIZED)
+                ->send();
+        }
     }
 
     public static function checkRefreshToken(?string $token) : void {
