@@ -210,6 +210,13 @@ abstract class JWT {
         return is_null($token) ? null : $token->verify(self::$signer, $key);
     }
 
+    /**
+     * Token whitelisté ou non (via son JTI)
+     *
+     * @param string $token Token
+     *
+     * @return bool Whitelisté ou non
+     */
     public static function isTokenWhitelisted(string $token) : bool {
         if (self::getTokenType($token) === self::TOKEN_REQUEST) {
             return true;
@@ -261,5 +268,23 @@ abstract class JWT {
      */
     public static function getUserID(string $token) : int {
         return self::getTokenObject($token)->getClaim("uid");
+    }
+
+    /**
+     * Blackliste tous les refresh token selon leur IP
+     *
+     * @param string $ip Adresse IP
+     */
+    public static function revokeTokenViaIP(string $ip) : void {
+        Database::executeOnly("DELETE FROM token WHERE sub = ?", "s", $ip);
+    }
+
+    /**
+     * Blackliste tous les refresh token selon leur JTI
+     *
+     * @param string $jti JWT ID
+     */
+    public static function revokeTokenViaJTI(string $jti) : void {
+        Database::executeOnly("DELETE FROM token WHERE jti = ?", "s", $jti);
     }
 }
